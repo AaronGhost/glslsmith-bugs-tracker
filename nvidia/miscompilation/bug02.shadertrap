@@ -1,27 +1,27 @@
 GLES 3.1
 
-CREATE_BUFFER buffer_0 SIZE_BYTES 16 INIT_VALUES int 1 0 -1 int -2147483648
+CREATE_BUFFER buffer_0 SIZE_BYTES 16 INIT_VALUES int 2 0 -2 int -2147483648
 BIND_SHADER_STORAGE_BUFFER BUFFER buffer_0 BINDING 0
 
 DECLARE_SHADER shader KIND COMPUTE
 #version 310 es
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(std430, binding = 0) buffer buffer_0 {
- int ext_2[3];
- int ext_3[1];
+ int ext_2[3]; // 2 0 -2
+ int ext_3[1]; //-2147483648
 } ;
 
-int func_1(int A) //return MAX_INT
+int return_zero() //return 0
 {
- return 2147483647;
+ return 0;
 }
-int func_2(inout int A, int B) //returns 1
+int return_1(inout int A, int B) //returns 1
 {
  return A = 1;
 }
 void main()
 {
-    func_2(ext_2[clamp(~ext_3[0], 0, 2)], ext_3[func_1(2147483647) % 1] += -2147483648);
+    return_1(ext_2[clamp(~ext_3[0], 0, 2)], ext_3[return_zero()] += -2147483648);
 }
 END
 
@@ -29,3 +29,4 @@ COMPILE_SHADER shader_compiled SHADER shader
 CREATE_PROGRAM compute_prog SHADERS shader_compiled
 RUN_COMPUTE PROGRAM compute_prog NUM_GROUPS 1 1 1
 DUMP_BUFFER_TEXT BUFFER buffer_0 FILE "buffer_0.txt" FORMAT "buffer_0 " int 3 " " int 1
+
