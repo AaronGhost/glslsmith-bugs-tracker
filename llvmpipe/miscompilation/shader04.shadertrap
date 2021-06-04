@@ -16,12 +16,12 @@ void main()
   ext_0 += ext_1; // ext_0 = 5
   switch(ext_1 ^= ext_0) // ext_0 = 5 ^ 5 = 0
   {
-     case 0u:
-     ext_2 = 1u;
-     break;
-   case 5u:
-     ext_2 = 2u;
-     break;
+    case 0u:
+      ext_2 = 1u;
+      break;
+    case 5u:
+      ext_2 = 2u;
+      break;
   }
 }
 END
