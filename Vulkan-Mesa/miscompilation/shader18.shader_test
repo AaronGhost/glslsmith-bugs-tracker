@@ -1,0 +1,28 @@
+[compute shader]
+#version 450
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer buffer_0 {
+ int ext_4[3]; // 1 1 1
+};
+
+void main()
+{
+ bool var_0[6] = bool[6](true, true, true, true, false, true);
+ int var_1[3] = ext_4;
+ ++ ext_4[int(var_0[var_1[1]]) % 3];
+}
+
+[test]
+ssbo 0 12
+
+ssbo 0 subdata int 0 1
+ssbo 0 subdata int 4 1
+ssbo 0 subdata int 8 1
+
+compute 1 1 1
+
+probe ssbo int 0 0 == 1
+probe ssbo int 0 4 == 2
+probe ssbo int 0 8 == 1 
