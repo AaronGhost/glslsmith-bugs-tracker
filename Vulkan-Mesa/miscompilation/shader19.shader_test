@@ -1,0 +1,22 @@
+[compute shader]
+#version 450
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer buffer_0 {
+ int ext_4; // -2
+};
+
+void main()
+{
+ ext_4 /= - sign(ext_4);
+}
+
+[test]
+ssbo 0 4
+
+ssbo 0 subdata int 0 -2
+
+compute 1 1 1
+
+probe ssbo int 0 0 == -2
