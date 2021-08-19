@@ -8,7 +8,7 @@ layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 void main()
 {
- for(uint var_0 = 1u; var_0 < 10; var_0 += 1u)
+ for(uint var_0 = 1u; var_0 < 10u; var_0 += 1u)
   {
    {
     const vec4 var_0 = vec4(1.0);
