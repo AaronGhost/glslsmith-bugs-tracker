@@ -1,0 +1,58 @@
+[compute shader spirv]
+; SPIR-V
+; Version: 1.0
+; Generator: Khronos Glslang Reference Front End; 10
+; Bound: 24
+; Schema: 0
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %main "main"
+               OpExecutionMode %main LocalSize 1 1 1
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %buffer_0 "buffer_0"
+               OpMemberName %buffer_0 0 "ext_0"
+               OpMemberName %buffer_0 1 "ext_1"
+               OpName %_ ""
+               OpMemberDecorate %buffer_0 0 Offset 0
+               OpMemberDecorate %buffer_0 1 Offset 4
+               OpDecorate %buffer_0 BufferBlock
+               OpDecorate %_ DescriptorSet 0
+               OpDecorate %_ Binding 0
+               OpDecorate %gl_WorkGroupSize BuiltIn WorkgroupSize
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+   %buffer_0 = OpTypeStruct %int %int
+%_ptr_Uniform_buffer_0 = OpTypePointer Uniform %buffer_0
+          %_ = OpVariable %_ptr_Uniform_buffer_0 Uniform
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+%_ptr_Uniform_int = OpTypePointer Uniform %int
+%int_n2018396466 = OpConstant %int -2018396466
+       %uint = OpTypeInt 32 0
+     %v3uint = OpTypeVector %uint 3
+     %uint_1 = OpConstant %uint 1
+%gl_WorkGroupSize = OpConstantComposite %v3uint %uint_1 %uint_1 %uint_1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+         %13 = OpAccessChain %_ptr_Uniform_int %_ %int_1
+         %14 = OpLoad %int %13
+         %15 = OpSNegate %int %14
+         %17 = OpSDiv %int %15 %int_n2018396466
+         %18 = OpSNegate %int %17
+         %19 = OpAccessChain %_ptr_Uniform_int %_ %int_0
+               OpStore %19 %18
+               OpReturn
+               OpFunctionEnd
+[test]
+ssbo 0 8
+
+ssbo 0 subdata int 0 0
+ssbo 0 subdata int 4 -2147483648
+
+compute 1 1 1
+
+probe ssbo int 0 0 == -1
+probe ssbo int 0 4 == -2147483648
