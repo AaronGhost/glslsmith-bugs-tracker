@@ -1,0 +1,23 @@
+[compute shader]
+#version 450
+
+layout(local_size_x = 1) in;
+layout(std430, binding = 0) buffer buffer_3 {
+ float ext_7;
+};
+
+void main()
+{
+ float var_0 = 1000000.0f;
+ ext_7 = any(greaterThanEqual(var_0 * vec2(100000.0f), vec2(16777216.0f))) || any(lessThanEqual(vec2(var_0), vec2(0.0f))) ? 2.0f : 1.0f;
+}
+
+
+[test]
+ssbo 0 4
+
+ssbo 0 subdata float 0 3.0
+
+compute 1 1 1
+
+probe ssbo float 0 0 == 2.0

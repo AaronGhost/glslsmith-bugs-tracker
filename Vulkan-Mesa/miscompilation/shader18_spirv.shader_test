@@ -1,0 +1,93 @@
+[compute shader spirv]
+; SPIR-V
+; Version: 1.0
+; Generator: Khronos Glslang Reference Front End; 10
+; Bound: 52
+; Schema: 0
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %main "main"
+               OpExecutionMode %main LocalSize 1 1 1
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %var_0 "var_0"
+               OpName %var_1 "var_1"
+               OpName %buffer_0 "buffer_0"
+               OpMemberName %buffer_0 0 "ext_4"
+               OpName %_ ""
+               OpDecorate %_arr_int_uint_3_0 ArrayStride 4
+               OpMemberDecorate %buffer_0 0 Offset 0
+               OpDecorate %buffer_0 BufferBlock
+               OpDecorate %_ DescriptorSet 0
+               OpDecorate %_ Binding 0
+               OpDecorate %gl_WorkGroupSize BuiltIn WorkgroupSize
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+       %bool = OpTypeBool
+       %uint = OpTypeInt 32 0
+     %uint_6 = OpConstant %uint 6
+%_arr_bool_uint_6 = OpTypeArray %bool %uint_6
+%_ptr_Function__arr_bool_uint_6 = OpTypePointer Function %_arr_bool_uint_6
+       %true = OpConstantTrue %bool
+      %false = OpConstantFalse %bool
+         %14 = OpConstantComposite %_arr_bool_uint_6 %true %true %true %true %false %true
+        %int = OpTypeInt 32 1
+     %uint_3 = OpConstant %uint 3
+%_arr_int_uint_3 = OpTypeArray %int %uint_3
+%_ptr_Function__arr_int_uint_3 = OpTypePointer Function %_arr_int_uint_3
+%_arr_int_uint_3_0 = OpTypeArray %int %uint_3
+   %buffer_0 = OpTypeStruct %_arr_int_uint_3_0
+%_ptr_Uniform_buffer_0 = OpTypePointer Uniform %buffer_0
+          %_ = OpVariable %_ptr_Uniform_buffer_0 Uniform
+      %int_0 = OpConstant %int 0
+%_ptr_Uniform__arr_int_uint_3_0 = OpTypePointer Uniform %_arr_int_uint_3_0
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %int_3 = OpConstant %int 3
+%_ptr_Uniform_int = OpTypePointer Uniform %int
+     %v3uint = OpTypeVector %uint 3
+     %uint_1 = OpConstant %uint 1
+%gl_WorkGroupSize = OpConstantComposite %v3uint %uint_1 %uint_1 %uint_1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+      %var_0 = OpVariable %_ptr_Function__arr_bool_uint_6 Function
+      %var_1 = OpVariable %_ptr_Function__arr_int_uint_3 Function
+               OpStore %var_0 %14
+         %26 = OpAccessChain %_ptr_Uniform__arr_int_uint_3_0 %_ %int_0
+         %27 = OpLoad %_arr_int_uint_3_0 %26
+         %28 = OpCompositeExtract %int %27 0
+         %30 = OpAccessChain %_ptr_Function_int %var_1 %int_0
+               OpStore %30 %28
+         %31 = OpCompositeExtract %int %27 1
+         %33 = OpAccessChain %_ptr_Function_int %var_1 %int_1
+               OpStore %33 %31
+         %34 = OpCompositeExtract %int %27 2
+         %36 = OpAccessChain %_ptr_Function_int %var_1 %int_2
+               OpStore %36 %34
+         %37 = OpAccessChain %_ptr_Function_int %var_1 %int_1
+         %38 = OpLoad %int %37
+         %40 = OpAccessChain %_ptr_Function_bool %var_0 %38
+         %41 = OpLoad %bool %40
+         %42 = OpSelect %int %41 %int_1 %int_0
+         %44 = OpSMod %int %42 %int_3
+         %46 = OpAccessChain %_ptr_Uniform_int %_ %int_0 %44
+         %47 = OpLoad %int %46
+         %48 = OpIAdd %int %47 %int_1
+               OpStore %46 %48
+               OpReturn
+               OpFunctionEnd
+[test]
+ssbo 0 12
+
+ssbo 0 subdata int 0 1
+ssbo 0 subdata int 4 1
+ssbo 0 subdata int 8 1
+
+compute 1 1 1
+
+probe ssbo int 0 0 == 1
+probe ssbo int 0 4 == 2
+probe ssbo int 0 8 == 1 

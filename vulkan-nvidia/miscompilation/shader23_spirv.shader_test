@@ -1,0 +1,80 @@
+[compute shader spirv]
+; SPIR-V
+; Version: 1.0
+; Generator: Khronos Glslang Reference Front End; 10
+; Bound: 45
+; Schema: 0
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %main "main"
+               OpExecutionMode %main LocalSize 1 1 1
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %var_0 "var_0"
+               OpName %buffer_3 "buffer_3"
+               OpMemberName %buffer_3 0 "ext_7"
+               OpName %_ ""
+               OpMemberDecorate %buffer_3 0 Offset 0
+               OpDecorate %buffer_3 BufferBlock
+               OpDecorate %_ DescriptorSet 0
+               OpDecorate %_ Binding 0
+               OpDecorate %gl_WorkGroupSize BuiltIn WorkgroupSize
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%float_1000000 = OpConstant %float 1000000
+   %buffer_3 = OpTypeStruct %float
+%_ptr_Uniform_buffer_3 = OpTypePointer Uniform %buffer_3
+          %_ = OpVariable %_ptr_Uniform_buffer_3 Uniform
+        %int = OpTypeInt 32 1
+      %int_0 = OpConstant %int 0
+       %bool = OpTypeBool
+    %v2float = OpTypeVector %float 2
+%float_100000 = OpConstant %float 100000
+         %19 = OpConstantComposite %v2float %float_100000 %float_100000
+%float_16777216 = OpConstant %float 16777216
+         %22 = OpConstantComposite %v2float %float_16777216 %float_16777216
+     %v2bool = OpTypeVector %bool 2
+    %float_0 = OpConstant %float 0
+         %32 = OpConstantComposite %v2float %float_0 %float_0
+    %float_2 = OpConstant %float 2
+    %float_1 = OpConstant %float 1
+%_ptr_Uniform_float = OpTypePointer Uniform %float
+       %uint = OpTypeInt 32 0
+     %v3uint = OpTypeVector %uint 3
+     %uint_1 = OpConstant %uint 1
+%gl_WorkGroupSize = OpConstantComposite %v3uint %uint_1 %uint_1 %uint_1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+      %var_0 = OpVariable %_ptr_Function_float Function
+               OpStore %var_0 %float_1000000
+         %16 = OpLoad %float %var_0
+         %20 = OpVectorTimesScalar %v2float %19 %16
+         %24 = OpFOrdGreaterThanEqual %v2bool %20 %22
+         %25 = OpAny %bool %24
+         %26 = OpLogicalNot %bool %25
+               OpSelectionMerge %28 None
+               OpBranchConditional %26 %27 %28
+         %27 = OpLabel
+         %29 = OpLoad %float %var_0
+         %30 = OpCompositeConstruct %v2float %29 %29
+         %33 = OpFOrdLessThanEqual %v2bool %30 %32
+         %34 = OpAny %bool %33
+               OpBranch %28
+         %28 = OpLabel
+         %35 = OpPhi %bool %25 %5 %34 %27
+         %38 = OpSelect %float %35 %float_2 %float_1
+         %40 = OpAccessChain %_ptr_Uniform_float %_ %int_0
+               OpStore %40 %38
+               OpReturn
+               OpFunctionEnd
+[test]
+ssbo 0 4
+
+ssbo 0 subdata float 0 3.0
+
+compute 1 1 1
+
+probe ssbo float 0 0 == 2.0

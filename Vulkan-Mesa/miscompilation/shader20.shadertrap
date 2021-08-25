@@ -1,21 +1,21 @@
-# Vulkan-Intel ANGLE (Might be duplicate of SPIRV-TOOLS)
-
 GLES 3.1
-CREATE_BUFFER buffer_0 SIZE_BYTES 8 INIT_VALUES int 2 int 4
+CREATE_BUFFER buffer_0 SIZE_BYTES 8 INIT_VALUES int 7 int 4
 BIND_SHADER_STORAGE_BUFFER BUFFER buffer_0 BINDING 0
 
 DECLARE_SHADER shader KIND COMPUTE
 #version 310 es
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
 layout(std430, binding = 0) buffer buffer_0 {
- int ext_1; // 2
- int ext_2; // 4
+ int ext_4;
+ int ext_5[1];
 };
 
 void main()
 {
- ext_2 /=  -(1 + 1 / ext_1);
+ ext_4 *= (- 1);
+ ext_4 /= (ext_5[0]);
 }
 
 END
