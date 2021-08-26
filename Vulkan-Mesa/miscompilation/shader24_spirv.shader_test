@@ -1,0 +1,84 @@
+[compute shader spirv]
+; SPIR-V
+; Version: 1.0
+; Generator: Khronos Glslang Reference Front End; 10
+; Bound: 42
+; Schema: 0
+               OpCapability Shader
+          %1 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %main "main"
+               OpExecutionMode %main LocalSize 1 1 1
+               OpSource GLSL 450
+               OpName %main "main"
+               OpName %SAFE_ABS_i1_ "SAFE_ABS(i1;"
+               OpName %A "A"
+               OpName %buffer_4 "buffer_4"
+               OpMemberName %buffer_4 0 "ext_7"
+               OpMemberName %buffer_4 1 "ext_8"
+               OpName %_ ""
+               OpName %param "param"
+               OpMemberDecorate %buffer_4 0 Offset 0
+               OpMemberDecorate %buffer_4 1 Offset 4
+               OpDecorate %buffer_4 BufferBlock
+               OpDecorate %_ DescriptorSet 0
+               OpDecorate %_ Binding 0
+               OpDecorate %gl_WorkGroupSize BuiltIn WorkgroupSize
+       %void = OpTypeVoid
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+          %8 = OpTypeFunction %int %_ptr_Function_int
+%int_n2147483648 = OpConstant %int -2147483648
+       %bool = OpTypeBool
+%int_2147483647 = OpConstant %int 2147483647
+   %buffer_4 = OpTypeStruct %int %int
+%_ptr_Uniform_buffer_4 = OpTypePointer Uniform %buffer_4
+          %_ = OpVariable %_ptr_Uniform_buffer_4 Uniform
+      %int_1 = OpConstant %int 1
+      %int_0 = OpConstant %int 0
+%_ptr_Uniform_int = OpTypePointer Uniform %int
+       %uint = OpTypeInt 32 0
+     %v3uint = OpTypeVector %uint 3
+     %uint_1 = OpConstant %uint 1
+%gl_WorkGroupSize = OpConstantComposite %v3uint %uint_1 %uint_1 %uint_1
+       %main = OpFunction %void None %3
+          %5 = OpLabel
+      %param = OpVariable %_ptr_Function_int Function
+         %32 = OpAccessChain %_ptr_Uniform_int %_ %int_0
+         %33 = OpLoad %int %32
+         %34 = OpExtInst %int %1 SAbs %33
+               OpStore %param %34
+         %36 = OpFunctionCall %int %SAFE_ABS_i1_ %param
+         %37 = OpAccessChain %_ptr_Uniform_int %_ %int_1
+               OpStore %37 %36
+               OpReturn
+               OpFunctionEnd
+%SAFE_ABS_i1_ = OpFunction %int None %8
+          %A = OpFunctionParameter %_ptr_Function_int
+         %11 = OpLabel
+         %16 = OpVariable %_ptr_Function_int Function
+         %12 = OpLoad %int %A
+         %15 = OpIEqual %bool %12 %int_n2147483648
+               OpSelectionMerge %18 None
+               OpBranchConditional %15 %17 %20
+         %17 = OpLabel
+               OpStore %16 %int_2147483647
+               OpBranch %18
+         %20 = OpLabel
+         %21 = OpLoad %int %A
+         %22 = OpExtInst %int %1 SAbs %21
+               OpStore %16 %22
+               OpBranch %18
+         %18 = OpLabel
+         %23 = OpLoad %int %16
+               OpReturnValue %23
+               OpFunctionEnd
+[test]
+ssbo 0 4
+
+ssbo 0 subdata int 0 -2147483648
+
+compute 1 1 1
+
+probe ssbo int 0 0 == 2147483647
