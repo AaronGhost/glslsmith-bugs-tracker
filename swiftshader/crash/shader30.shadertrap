@@ -1,0 +1,34 @@
+GLES 3.1
+CREATE_BUFFER buffer_0 SIZE_BYTES 4 INIT_VALUES int 1535
+BIND_SHADER_STORAGE_BUFFER BUFFER buffer_0 BINDING 0
+
+CREATE_BUFFER buffer_1 SIZE_BYTES 4 INIT_VALUES int 2940
+BIND_SHADER_STORAGE_BUFFER BUFFER buffer_1 BINDING 1
+
+DECLARE_SHADER shader KIND COMPUTE
+#version 310 es
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(std430, binding = 0) buffer buffer_0 {
+ int ext_0;
+};
+
+layout(std430, binding = 1) buffer buffer_1 {
+ int ext_4;
+};
+
+int SAFE_ABS(int A)
+{
+ return A < 0 ? 2 : abs(A);
+}
+void main()
+{
+ ext_4 = int[1](ext_0)[SAFE_ABS(0) % 1];
+}
+
+END
+
+COMPILE_SHADER shader_compiled SHADER shader
+CREATE_PROGRAM compute_prog SHADERS shader_compiled
+RUN_COMPUTE PROGRAM compute_prog NUM_GROUPS 1 1 1
+DUMP_BUFFER_TEXT BUFFER buffer_1 FILE "buffer_1.txt" FORMAT "buffer_1 " int 1
